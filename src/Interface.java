@@ -19,6 +19,8 @@ public class Interface extends JFrame implements ActionListener {
     JTextField height;
 
     JPanel toolBar;
+    JPanel toolBarR;
+    JPanel toolBarL;
     BufferedImage graphics;
     Graphics2D g;
     SwingWorker<Void, Void> worker;
@@ -37,6 +39,18 @@ public class Interface extends JFrame implements ActionListener {
     public Interface() {
         setSize(1500, 1000);
         background = new Color(0xaacccc);
+        loadHome();
+        launch.setEnabled(true);
+        cancelled = true;
+        graphics = null;
+        mainPanel.setVisible(false);
+        Projectile dart = new Projectile(Double.parseDouble(velocity.getText()), Double.parseDouble(launchAngle.getText()),
+                Double.parseDouble(height.getText()), Double.parseDouble(dragCoefficientF.getText()),
+                Double.parseDouble(fluidDensityF.getText()), Double.parseDouble(surfaceAreaF.getText()),
+                Double.parseDouble(massF.getText()));
+        dart.launch(0.0001);
+        length = dart.getX_position();
+        maxHeight = dart.getMaxHeight();
         loadHome();
     }
 
@@ -133,21 +147,34 @@ public class Interface extends JFrame implements ActionListener {
 
 
         toolBar = new JPanel();
-        toolBar.setLayout(new FlowLayout());
+        toolBar.setLayout(new BorderLayout());
         toolBar.setVisible(true);
         mainPanel.add(toolBar, BorderLayout.SOUTH);
+
+        toolBarL = new JPanel();
+        toolBarL.setLayout(new FlowLayout());
+        toolBarL.setVisible(true);
+        toolBar.add(toolBarL, BorderLayout.WEST);
+
+        toolBarR = new JPanel();
+        toolBarR.setLayout(new FlowLayout());
+        toolBarR.setVisible(true);
+        toolBar.add(toolBarR, BorderLayout.EAST);
+
+
+        toolBarL.add(new JLabel("        "));
 
         if (launch == null) {
             launch = new JButton("Launch");
             launch.addActionListener(this);
         }
-        toolBar.add(launch);
+        toolBarL.add(launch);
 
         if (setScale == null) {
             setScale = new JButton("Set Scale");
             setScale.addActionListener(this);
         }
-        toolBar.add(setScale);
+        toolBarL.add(setScale);
 
 
         add(mainPanel);
@@ -161,9 +188,9 @@ public class Interface extends JFrame implements ActionListener {
                 Double.parseDouble(fluidDensityF.getText()), Double.parseDouble(surfaceAreaF.getText()),
                 Double.parseDouble(massF.getText()));
         dart.launch(0.0001);
-        toolBar.add(new JLabel("Distance: " + String.format("%.2f", dart.getX_position()) + "m     "));
-        toolBar.add(new JLabel("Max Height: " + String.format("%.2f", dart.getMaxHeight()) + "m     "));
-        toolBar.add(new JLabel("Time in Flight: " + String.format("%.2f", dart.getTime()) + "s"));
+        toolBarR.add(new JLabel("Distance: " + String.format("%.2f", dart.getX_position()) + "m     "));
+        toolBarR.add(new JLabel("Max Height: " + String.format("%.2f", dart.getMaxHeight()) + "m     "));
+        toolBarR.add(new JLabel("Time in Flight: " + String.format("%.2f", dart.getTime()) + "s"));
 
         dart = new Projectile(Double.parseDouble(velocity.getText()), Double.parseDouble(launchAngle.getText()),
                 Double.parseDouble(height.getText()), Double.parseDouble(dragCoefficientF.getText()),
@@ -186,6 +213,7 @@ public class Interface extends JFrame implements ActionListener {
 
             @Override
             protected void done() {
+                launch.setEnabled(true);
                 super.done();
             }
 
@@ -205,17 +233,10 @@ public class Interface extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == setScale) {
+            launch.setEnabled(true);
             cancelled = true;
             graphics = null;
             mainPanel.setVisible(false);
-            loadHome();
-        }
-
-        if (e.getSource() == launch) {
-            cancelled = true;
-            graphics = null;
-            mainPanel.setVisible(false);
-            loadHome();
             Projectile dart = new Projectile(Double.parseDouble(velocity.getText()), Double.parseDouble(launchAngle.getText()),
                     Double.parseDouble(height.getText()), Double.parseDouble(dragCoefficientF.getText()),
                     Double.parseDouble(fluidDensityF.getText()), Double.parseDouble(surfaceAreaF.getText()),
@@ -223,6 +244,13 @@ public class Interface extends JFrame implements ActionListener {
             dart.launch(0.0001);
             length = dart.getX_position();
             maxHeight = dart.getMaxHeight();
+            loadHome();
+        }
+
+        if (e.getSource() == launch) {
+            launch.setEnabled(false);
+            mainPanel.setVisible(false);
+            loadHome();
             launchProjectile();
         }
     }
