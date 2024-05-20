@@ -10,6 +10,7 @@ public class Projectile {
     private double time;
     private double maxHeight;
     private double minVelocity;
+    private double gravity;
 
 
     public Projectile() {
@@ -24,9 +25,10 @@ public class Projectile {
         surfaceArea = 0.000126;
         mass = 0.001;
         minVelocity = 0;
+        gravity = -9.80665;
     }
 
-    public Projectile(double velocity, double angle, double height, double dragCoefficient, double fluidDensity, double surfaceArea, double mass) {
+    public Projectile(double velocity, double angle, double height, double dragCoefficient, double fluidDensity, double surfaceArea, double mass, double gravity) {
         this.velocity = velocity;
         this.angle = angle;
         x_position = 0;
@@ -38,6 +40,7 @@ public class Projectile {
         this.surfaceArea = surfaceArea;
         this.mass = mass;
         minVelocity = 0;
+        this.gravity = gravity;
     }
 
     public double getVelocity() {
@@ -122,6 +125,10 @@ public class Projectile {
         this.surfaceArea = surfaceArea;
     }
 
+    public void setGravity(double gravity) {
+        this.gravity = gravity;
+    }
+
     public void move(double dt) {
         setX_position(getX_position() + dt * getVelocity() * Math.cos(getAngle()*Math.PI/180) + 0.5
                 * accelerationX(getAngle(), getVelocity()) * Math.pow(dt, 2));
@@ -164,7 +171,7 @@ public class Projectile {
     }
 
     public double acceleration(double angle, double velocity) {
-        return -9.81 * (Math.sin(angle*Math.PI/180)) - (dragCoefficient*surfaceArea*Math.pow(velocity, 2)*fluidDensity/2)/mass;
+        return gravity * (Math.sin(angle*Math.PI/180)) - (dragCoefficient*surfaceArea*Math.pow(velocity, 2)*fluidDensity/2)/mass;
     }
 
     public double accelerationX(double angle, double velocity) {
@@ -172,6 +179,6 @@ public class Projectile {
     }
 
     public double accelerationY(double angle, double velocity) {
-        return -9.81 - dragCoefficient*surfaceArea*Math.pow(velocity, 2)*fluidDensity/2/mass*Math.sin(angle*Math.PI/180);
+        return gravity - dragCoefficient*surfaceArea*Math.pow(velocity, 2)*fluidDensity/2/mass*Math.sin(angle*Math.PI/180);
     }
 }

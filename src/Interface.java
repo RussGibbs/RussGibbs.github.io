@@ -8,6 +8,7 @@ public class Interface extends JFrame implements ActionListener {
     JPanel mainPanel;
 
     Color background;
+    Color axesColor;
 
     JTextField dragCoefficientF;
     JTextField fluidDensityF;
@@ -44,8 +45,9 @@ public class Interface extends JFrame implements ActionListener {
     double minVelocity;
 
     public Interface() {
-        setSize(1500, 1000);
-        background = new Color(0xaacccc);
+        setSize(4480, 2520);
+        background = new Color(0x000000);
+        axesColor = new Color(0xaaaaaa);
         loadHome();
         launch.setEnabled(true);
         cancelled = true;
@@ -54,7 +56,7 @@ public class Interface extends JFrame implements ActionListener {
         Projectile dart = new Projectile(Double.parseDouble(velocity.getText()), Double.parseDouble(launchAngle.getText()),
                 Double.parseDouble(height.getText()), Double.parseDouble(dragCoefficientF.getText()),
                 Double.parseDouble(fluidDensityF.getText()), Double.parseDouble(surfaceAreaF.getText()),
-                Double.parseDouble(massF.getText()));
+                Double.parseDouble(massF.getText()), Double.parseDouble(gravity.getText()));
         dart.launch(0.0001);
         length = dart.getX_position();
         maxHeight = dart.getMaxHeight();
@@ -131,7 +133,7 @@ public class Interface extends JFrame implements ActionListener {
 
         controlPanels[8].add(new JLabel("Gravity (ms^-2)"));
         if (gravity == null) {
-            gravity = new JTextField("-9.81", 10);
+            gravity = new JTextField("-9.80665", 10);
             gravity.addActionListener(this);
         }
         controlPanels[8].add(gravity);
@@ -150,7 +152,7 @@ public class Interface extends JFrame implements ActionListener {
             g.setColor(background);
             g.fillRect(0, 0, getWidth() - 400, getHeight() - 100);
             g.setColor(Color.DARK_GRAY);
-            g.fillRect(100, getHeight() - 200, getWidth() - 400 - 300, 2);
+            g.fillRect(100, getHeight() - 200, getWidth() - 400 - 250, 2);
             g.fillRect(100, 150, 2, getHeight() - 100 - 250);
         }
         mainPanel.add(new JLabel(new ImageIcon(graphics)), BorderLayout.CENTER);
@@ -158,42 +160,50 @@ public class Interface extends JFrame implements ActionListener {
 
         if (yAxis == null) {
             yAxis = new JPanel();
-            yAxis.setLayout(new GridLayout(10, 1));
+            yAxis.setLayout(new GridLayout(40, 1));
             yAxis.setBackground(background);
-            JPanel[] yAxes = new JPanel[10];
+            JPanel[] yAxes = new JPanel[40];
 
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 40; i++) {
                 yAxes[i] = new JPanel();
                 yAxes[i].setLayout(new FlowLayout());
                 yAxes[i].setBackground(background);
                 yAxis.add(yAxes[i]);
             }
 
-            dart = new Projectile(Double.parseDouble(velocity.getText()), Double.parseDouble(launchAngle.getText()),
+            this.dart = new Projectile(Double.parseDouble(velocity.getText()), Double.parseDouble(launchAngle.getText()),
                     Double.parseDouble(height.getText()), Double.parseDouble(dragCoefficientF.getText()),
                     Double.parseDouble(fluidDensityF.getText()), Double.parseDouble(surfaceAreaF.getText()),
-                    Double.parseDouble(massF.getText()));
-            dart.launch(0.0001);
+                    Double.parseDouble(massF.getText()), Double.parseDouble(gravity.getText()));
+            this.dart.launch(0.0001);
             if (maxVelocity == 0)  {
                 maxVelocity = Double.parseDouble(velocity.getText()) * 1.4;
                 minVelocity = 0;
             }
 
-            yAxes[1].add(new JLabel("                                                         " +
+            JLabel label = new JLabel("                                                         " +
                     String.format("%.0f", dart.getX_position() / (getWidth() - 400 - 300) * (getHeight() - 100 - 250) * 4 / 4) +
-                    "m"));
+                    "m");
+            label.setForeground(axesColor);
+            yAxes[3].add(label);
 
-            yAxes[3].add(new JLabel("                                                         " +
+            label = new JLabel("                                                         " +
                     String.format("%.0f", dart.getX_position() / (getWidth() - 400 - 300) * (getHeight() - 100 - 250) * 3 / 4) +
-                    "m"));
+                    "m");
+            label.setForeground(axesColor);
+            yAxes[12].add(label);
 
-            yAxes[5].add(new JLabel("                                                         " +
+            label = new JLabel("                                                         " +
                     String.format("%.0f", dart.getX_position() / (getWidth() - 400 - 300) * (getHeight() - 100 - 250) * 2 / 4) +
-                    "m"));
+                    "m");
+            label.setForeground(axesColor);
+            yAxes[21].add(label);
 
-            yAxes[7].add(new JLabel("                                                         " +
+            label = new JLabel("                                                         " +
                     String.format("%.0f", dart.getX_position() / (getWidth() - 400 - 300) * (getHeight() - 100 - 250) * 1 / 4) +
-                    "m"));
+                    "m");
+            label.setForeground(axesColor);
+            yAxes[30].add(label);
         }
         leftPanel.add(yAxis);
 
@@ -206,10 +216,10 @@ public class Interface extends JFrame implements ActionListener {
             xAxis = new JPanel();
             xAxis.setLayout(new GridLayout(1, 7));
             xAxis.setBackground(background);
-            JPanel[] xAxes = new JPanel[7];
-            JPanel[][] xAxes2 = new JPanel[7][4];
+            JPanel[] xAxes = new JPanel[40];
+            JPanel[][] xAxes2 = new JPanel[40][4];
 
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < 40; i++) {
                 xAxes[i] = new JPanel();
                 xAxes[i].setLayout(new GridLayout(4, 1));
                 xAxes[i].setBackground(background);
@@ -217,16 +227,27 @@ public class Interface extends JFrame implements ActionListener {
 
                 for (int j = 0; j < 4; j++) {
                     xAxes2[i][j] = new JPanel();
-                    xAxes2[i][j].setLayout(new FlowLayout());
+                    xAxes2[i][j].setLayout(new BorderLayout());
                     xAxes2[i][j].setBackground(background);
                     xAxes[i].add(xAxes2[i][j]);
                 }
             }
 
-            xAxes2[3][0].add(new JLabel("          " + String.format("%.0f", dart.getX_position() * 1 / 4) + "m"));
-            xAxes2[4][0].add(new JLabel("        " + String.format("%.0f", dart.getX_position() * 2 / 4) + "m"));
-            xAxes2[5][0].add(new JLabel("      " + String.format("%.0f", dart.getX_position() * 3 / 4) + "m"));
-            xAxes2[6][0].add(new JLabel("" + String.format("%.0f", dart.getX_position() * 4 / 4) + "m"));
+            JLabel label = new JLabel(String.format("%.0f", dart.getX_position() * 1 / 4) + "m");
+            label.setForeground(axesColor);
+            xAxes2[17][0].add(label, BorderLayout.WEST);
+
+            label = new JLabel(String.format("%.0f", dart.getX_position() * 2 / 4) + "m");
+            label.setForeground(axesColor);
+            xAxes2[24][0].add(label, BorderLayout.WEST);
+
+            label = new JLabel(String.format("%.0f", dart.getX_position() * 3 / 4) + "m");
+            label.setForeground(axesColor);
+            xAxes2[31][0].add(label, BorderLayout.WEST);
+
+            label = new JLabel(String.format("%.0f", dart.getX_position() * 4 / 4) + "m");
+            label.setForeground(axesColor);
+            xAxes2[38][0].add(label, BorderLayout.WEST);
         }
         lowPanel.add(xAxis);
 
@@ -286,17 +307,17 @@ public class Interface extends JFrame implements ActionListener {
             for (int i = 1; i < 52; i++) {
                 blue -= 5;
                 gr.setColor(new Color(red, green, blue));
-                gr.fillRect((52 + i) * getWidth() / (7 * 51 * 4 + 1), 0, getWidth() / (7 * 51 * 4 + 1) * 2, 30);
+                gr.fillRect((51 + i) * getWidth() / (7 * 51 * 4 + 1), 0, getWidth() / (7 * 51 * 4 + 1) * 2, 30);
             }
             for (int i = 1; i < 52; i++) {
                 red = 5 * i;
                 gr.setColor(new Color(red, green, blue));
-                gr.fillRect((52 + 51 + i) * getWidth() / (7 * 51 * 4 + 1), 0, getWidth() / (7 * 51 * 4 + 1) * 2, 30);
+                gr.fillRect((51 + 51 + i) * getWidth() / (7 * 51 * 4 + 1), 0, getWidth() / (7 * 51 * 4 + 1) * 2, 30);
             }
             for (int i = 1; i < 52; i++) {
                 green -= 5;
                 gr.setColor(new Color(red, green, blue));
-                gr.fillRect((52 + 51 + 51 + i) * getWidth() / (7 * 51 * 4 + 1), 0, getWidth() / (7 * 51 * 4 + 1) * 2, 30);
+                gr.fillRect((51 + 51 + 51 + i) * getWidth() / (7 * 51 * 4 + 1), 0, getWidth() / (7 * 51 * 4 + 1) * 2, 30);
             }
         }
         JPanel gradientPanel = new JPanel();
@@ -306,7 +327,7 @@ public class Interface extends JFrame implements ActionListener {
         if (gradientLabelPanel == null) {
             gradientLabelPanel = new JPanel();
             gradientLabelPanel.setLayout(new FlowLayout());
-            gradientLabelPanel.add(new JLabel("0 m/s                                     "));
+            gradientLabelPanel.add(new JLabel("0 m/s                                                         "));
             gradientLabelPanel.add(new JLabel(String.format("%.0f", Double.parseDouble(velocity.getText()) * 1.4)  + " m/s"));
         }
 
@@ -318,11 +339,11 @@ public class Interface extends JFrame implements ActionListener {
     }
 
     public void launchProjectile() {
-        dart = new Projectile(Double.parseDouble(velocity.getText()), Double.parseDouble(launchAngle.getText()),
+        this.dart = new Projectile(Double.parseDouble(velocity.getText()), Double.parseDouble(launchAngle.getText()),
                 Double.parseDouble(height.getText()), Double.parseDouble(dragCoefficientF.getText()),
                 Double.parseDouble(fluidDensityF.getText()), Double.parseDouble(surfaceAreaF.getText()),
-                Double.parseDouble(massF.getText()));
-        dart.launch(0.0001);
+                Double.parseDouble(massF.getText()), Double.parseDouble(gravity.getText()));
+        this.dart.launch(0.0001);
         toolBarR.setVisible(false);
         toolBarR = new JPanel();
         toolBarR.setLayout(new FlowLayout());
@@ -333,12 +354,12 @@ public class Interface extends JFrame implements ActionListener {
         toolBarR.add(new JLabel("Time in Flight: " + String.format("%.2f", dart.getTime()) + "s      "));
         toolBarR.add(new JLabel("Minimum Velocity Reached: " + String.format("%.2f", dart.getMinVelocity()) + "m/s      "));
 
-        dart = new Projectile(Double.parseDouble(velocity.getText()), Double.parseDouble(launchAngle.getText()),
+        this.dart = new Projectile(Double.parseDouble(velocity.getText()), Double.parseDouble(launchAngle.getText()),
                 Double.parseDouble(height.getText()), Double.parseDouble(dragCoefficientF.getText()),
                 Double.parseDouble(fluidDensityF.getText()), Double.parseDouble(surfaceAreaF.getText()),
-                Double.parseDouble(massF.getText()));
+                Double.parseDouble(massF.getText()), Double.parseDouble(gravity.getText()));
 
-            worker = new SwingWorker<Void, Void>() {
+        worker = new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
                 while (!(dart.getY_position() < 0 && dart.getAngle() < 0)) {
@@ -346,7 +367,7 @@ public class Interface extends JFrame implements ActionListener {
                         long start = System.nanoTime();
                         process(null);
                         dart.move(0.0001);
-                        while (System.nanoTime() - start < 100000) {}
+                        while (System.nanoTime() - start < 100000);
                     }
                 }
                 return null;
@@ -418,7 +439,7 @@ public class Interface extends JFrame implements ActionListener {
             Projectile dart = new Projectile(Double.parseDouble(velocity.getText()), Double.parseDouble(launchAngle.getText()),
                     Double.parseDouble(height.getText()), Double.parseDouble(dragCoefficientF.getText()),
                     Double.parseDouble(fluidDensityF.getText()), Double.parseDouble(surfaceAreaF.getText()),
-                    Double.parseDouble(massF.getText()));
+                    Double.parseDouble(massF.getText()), Double.parseDouble(gravity.getText()));
             dart.launch(0.0001);
             maxVelocity = Double.parseDouble(velocity.getText()) * 1.4;
             minVelocity = 0;
