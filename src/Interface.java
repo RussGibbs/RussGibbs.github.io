@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.text.FlowView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,11 +19,18 @@ public class Interface extends JFrame implements ActionListener {
     JTextField gravity;
     JTextField height;
 
+    JPanel yAxis;
+    JPanel xAxis;
+
     JPanel toolBar;
     JPanel toolBarR;
     JPanel toolBarL;
     BufferedImage graphics;
     Graphics2D g;
+
+    JPanel toolBarM;
+    BufferedImage gradient;
+    JPanel gradientLabelPanel;
     SwingWorker<Void, Void> worker;
     boolean cancelled;
 
@@ -30,11 +38,11 @@ public class Interface extends JFrame implements ActionListener {
     double length;
     double maxHeight;
 
-
     JButton launch;
     JButton setScale;
 
-    Timer timer;
+    double maxVelocity;
+    double minVelocity;
 
     public Interface() {
         setSize(1500, 1000);
@@ -61,10 +69,13 @@ public class Interface extends JFrame implements ActionListener {
         mainPanel.setVisible(true);
         mainPanel.setLayout(new BorderLayout());
 
+        JPanel leftPanel = new JPanel();
+        leftPanel.setLayout(new GridLayout(1, 2));
+        mainPanel.add(leftPanel, BorderLayout.WEST);
         JPanel controlPanel = new JPanel();
         controlPanel.setBackground(background);
         controlPanel.setLayout(new GridLayout(10, 1));
-        mainPanel.add(controlPanel, BorderLayout.WEST);
+        leftPanel.add(controlPanel);
 
         JPanel[] controlPanels = new JPanel[10];
 
@@ -107,7 +118,7 @@ public class Interface extends JFrame implements ActionListener {
 
         controlPanels[6].add(new JLabel("Velocity (ms^-1)"));
         if (velocity == null) {
-            velocity = new JTextField("30", 10);
+            velocity = new JTextField("100", 10);
             velocity.addActionListener(this);
         }
         controlPanels[6].add(velocity);
@@ -140,16 +151,91 @@ public class Interface extends JFrame implements ActionListener {
             g.setColor(background);
             g.fillRect(0, 0, getWidth() - 400, getHeight() - 100);
             g.setColor(Color.DARK_GRAY);
-            g.fillRect(100, getHeight() - 200, getWidth() - 400 - 200, 2);
-            g.fillRect(100, 100, 2, getHeight() - 100 - 200);
+            g.fillRect(100, getHeight() - 200, getWidth() - 400 - 300, 2);
+            g.fillRect(100, 150, 2, getHeight() - 100 - 250);
         }
         mainPanel.add(new JLabel(new ImageIcon(graphics)), BorderLayout.CENTER);
 
 
+        if (yAxis == null) {
+            yAxis = new JPanel();
+            yAxis.setLayout(new GridLayout(10, 1));
+            yAxis.setBackground(background);
+            JPanel[] yAxes = new JPanel[10];
+
+            for (int i = 0; i < 10; i++) {
+                yAxes[i] = new JPanel();
+                yAxes[i].setLayout(new FlowLayout());
+                yAxes[i].setBackground(background);
+                yAxis.add(yAxes[i]);
+            }
+
+            dart = new Projectile(Double.parseDouble(velocity.getText()), Double.parseDouble(launchAngle.getText()),
+                    Double.parseDouble(height.getText()), Double.parseDouble(dragCoefficientF.getText()),
+                    Double.parseDouble(fluidDensityF.getText()), Double.parseDouble(surfaceAreaF.getText()),
+                    Double.parseDouble(massF.getText()));
+            dart.launch(0.0001);
+            if (maxVelocity == 0)  {
+                maxVelocity = Double.parseDouble(velocity.getText()) * 1.4;
+                minVelocity = 0;
+            }
+
+            yAxes[1].add(new JLabel("                                                         " +
+                    String.format("%.0f", dart.getX_position() / (getWidth() - 400 - 300) * (getHeight() - 100 - 250) * 4 / 4) +
+                    "m"));
+
+            yAxes[3].add(new JLabel("                                                         " +
+                    String.format("%.0f", dart.getX_position() / (getWidth() - 400 - 300) * (getHeight() - 100 - 250) * 3 / 4) +
+                    "m"));
+
+            yAxes[5].add(new JLabel("                                                         " +
+                    String.format("%.0f", dart.getX_position() / (getWidth() - 400 - 300) * (getHeight() - 100 - 250) * 2 / 4) +
+                    "m"));
+
+            yAxes[7].add(new JLabel("                                                         " +
+                    String.format("%.0f", dart.getX_position() / (getWidth() - 400 - 300) * (getHeight() - 100 - 250) * 1 / 4) +
+                    "m"));
+        }
+        leftPanel.add(yAxis);
+
+
+        JPanel lowPanel = new JPanel();
+        lowPanel.setLayout(new GridLayout(2, 1));
+        mainPanel.add(lowPanel, BorderLayout.SOUTH);
+
+        if (xAxis == null) {
+            xAxis = new JPanel();
+            xAxis.setLayout(new GridLayout(1, 7));
+            xAxis.setBackground(background);
+            JPanel[] xAxes = new JPanel[7];
+            JPanel[][] xAxes2 = new JPanel[7][4];
+
+            for (int i = 0; i < 7; i++) {
+                xAxes[i] = new JPanel();
+                xAxes[i].setLayout(new GridLayout(4, 1));
+                xAxes[i].setBackground(background);
+                xAxis.add(xAxes[i]);
+
+                for (int j = 0; j < 4; j++) {
+                    xAxes2[i][j] = new JPanel();
+                    xAxes2[i][j].setLayout(new FlowLayout());
+                    xAxes2[i][j].setBackground(background);
+                    xAxes[i].add(xAxes2[i][j]);
+                }
+            }
+
+            xAxes2[3][0].add(new JLabel("          " + String.format("%.0f", dart.getX_position() * 1 / 4) + "m"));
+            xAxes2[4][0].add(new JLabel("        " + String.format("%.0f", dart.getX_position() * 2 / 4) + "m"));
+            xAxes2[5][0].add(new JLabel("      " + String.format("%.0f", dart.getX_position() * 3 / 4) + "m"));
+            xAxes2[6][0].add(new JLabel("" + String.format("%.0f", dart.getX_position() * 4 / 4) + "m"));
+        }
+        lowPanel.add(xAxis);
+
         toolBar = new JPanel();
         toolBar.setLayout(new BorderLayout());
         toolBar.setVisible(true);
-        mainPanel.add(toolBar, BorderLayout.SOUTH);
+        lowPanel.add(toolBar);
+
 
         toolBarL = new JPanel();
         toolBarL.setLayout(new FlowLayout());
@@ -160,6 +246,12 @@ public class Interface extends JFrame implements ActionListener {
         toolBarR.setLayout(new FlowLayout());
         toolBarR.setVisible(true);
         toolBar.add(toolBarR, BorderLayout.EAST);
+
+        toolBarR.add(new JLabel("Distance:                   "));
+        toolBarR.add(new JLabel("Max Height:                    "));
+        toolBarR.add(new JLabel("Time in Flight:                  "));
+        toolBarR.add(new JLabel("Velocity at Apex:                   "));
+        toolBarR.add(new JLabel("Minimum Velocity Reached:                    "));
 
 
         toolBarL.add(new JLabel("        "));
@@ -176,6 +268,51 @@ public class Interface extends JFrame implements ActionListener {
         }
         toolBarL.add(setScale);
 
+        toolBarM = new JPanel();
+        toolBarM.setLayout(new GridLayout(3, 1));
+        toolBarM.setVisible(true);
+        toolBar.add(toolBarM, BorderLayout.CENTER);
+
+        if (gradient == null) {
+            gradient = new BufferedImage(getWidth() / 7, 30, BufferedImage.TYPE_INT_RGB);
+            Graphics2D gr = (Graphics2D) gradient.getGraphics();
+            int red = 0;
+            int green = 0;
+            int blue = 255;
+            for (int i = 0; i < 52; i++) {
+                green = 5 * i;
+                gr.setColor(new Color(red, green, blue));
+                gr.fillRect(i * getWidth() / (7 * 51 * 4 + 1), 0, getWidth() / (7 * 51 * 4 + 1) * 2, 30);
+
+            }
+            for (int i = 1; i < 52; i++) {
+                blue -= 5;
+                gr.setColor(new Color(red, green, blue));
+                gr.fillRect((52 + i) * getWidth() / (7 * 51 * 4 + 1), 0, getWidth() / (7 * 51 * 4 + 1) * 2, 30);
+            }
+            for (int i = 1; i < 52; i++) {
+                red = 5 * i;
+                gr.setColor(new Color(red, green, blue));
+                gr.fillRect((52 + 51 + i) * getWidth() / (7 * 51 * 4 + 1), 0, getWidth() / (7 * 51 * 4 + 1) * 2, 30);
+            }
+            for (int i = 1; i < 52; i++) {
+                green -= 5;
+                gr.setColor(new Color(red, green, blue));
+                gr.fillRect((52 + 51 + 51 + i) * getWidth() / (7 * 51 * 4 + 1), 0, getWidth() / (7 * 51 * 4 + 1) * 2, 30);
+            }
+        }
+        JPanel gradientPanel = new JPanel();
+        gradientPanel.add(new JLabel(new ImageIcon(gradient)));
+        toolBarM.add(gradientPanel);
+
+        if (gradientLabelPanel == null) {
+            gradientLabelPanel = new JPanel();
+            gradientLabelPanel.setLayout(new FlowLayout());
+            gradientLabelPanel.add(new JLabel("0 m/s                                     "));
+            gradientLabelPanel.add(new JLabel(String.format("%.0f", Double.parseDouble(velocity.getText()) * 1.4)  + " m/s"));
+        }
+
+        toolBarM.add(gradientLabelPanel);
 
         add(mainPanel);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -188,9 +325,16 @@ public class Interface extends JFrame implements ActionListener {
                 Double.parseDouble(fluidDensityF.getText()), Double.parseDouble(surfaceAreaF.getText()),
                 Double.parseDouble(massF.getText()));
         dart.launch(0.0001);
+        toolBarR.setVisible(false);
+        toolBarR = new JPanel();
+        toolBarR.setLayout(new FlowLayout());
+        toolBarR.setVisible(true);
+        toolBar.add(toolBarR, BorderLayout.EAST);
         toolBarR.add(new JLabel("Distance: " + String.format("%.2f", dart.getX_position()) + "m     "));
         toolBarR.add(new JLabel("Max Height: " + String.format("%.2f", dart.getMaxHeight()) + "m     "));
-        toolBarR.add(new JLabel("Time in Flight: " + String.format("%.2f", dart.getTime()) + "s"));
+        toolBarR.add(new JLabel("Time in Flight: " + String.format("%.2f", dart.getTime()) + "s      "));
+        toolBarR.add(new JLabel("Velocity at Apex: " + String.format("%.2f", dart.getApexVelocity()) + "m/s      "));
+        toolBarR.add(new JLabel("Minimum Velocity Reached: " + String.format("%.2f", dart.getMinVelocity()) + "m/s      "));
 
         dart = new Projectile(Double.parseDouble(velocity.getText()), Double.parseDouble(launchAngle.getText()),
                 Double.parseDouble(height.getText()), Double.parseDouble(dragCoefficientF.getText()),
@@ -219,8 +363,41 @@ public class Interface extends JFrame implements ActionListener {
 
             @Override
             protected void process(java.util.List<Void> chunks) {
-                g.fillRect((int) (100 + dart.getX_position() / length * (getWidth() - 400 - 200)),
-                        (int) (getHeight() - 200 - dart.getY_position() / length * (getWidth() - 400 - 200)),
+                int rr = 0;
+                int gg = 0;
+                int bb = 255;
+
+
+                int increment = (int) ((maxVelocity - minVelocity) / 4);
+                if (dart.getVelocity() > maxVelocity) {
+                    rr = 255;
+                    bb = 0;
+                } else if (!(dart.getVelocity() < minVelocity)) {
+                    if (dart.getVelocity() <= minVelocity + increment) {
+                        gg += 255 * (int) (dart.getVelocity() - minVelocity) / increment;
+                    } else {
+                        gg = 255;
+                        if (dart.getVelocity() <= minVelocity + increment * 2) {
+                            bb -= 255 * (int) (dart.getVelocity() - minVelocity - increment) / increment;
+                        } else {
+                            bb = 0;
+                            if (dart.getVelocity() <= minVelocity + increment * 3) {
+                                rr += 255 * (int) (dart.getVelocity() - minVelocity - increment * 2) / increment;
+                            } else {
+                                rr = 255;
+                                if (dart.getVelocity() <= minVelocity + increment * 4) {
+                                    gg -= 255 * (int) (dart.getVelocity() - minVelocity - increment * 3) / increment;
+                                } else {
+                                    gg = 0;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                g.setColor(new Color(rr, gg, bb));
+                g.fillRect((int) (100 + dart.getX_position() / length * (getWidth() - 400 - 300)),
+                        (int) (getHeight() - 200 - dart.getY_position() / length * (getWidth() - 400 - 300)),
                         3, 3);
                 repaint();
             }
@@ -236,12 +413,18 @@ public class Interface extends JFrame implements ActionListener {
             launch.setEnabled(true);
             cancelled = true;
             graphics = null;
+            xAxis = null;
+            yAxis = null;
+            gradient = null;
+            gradientLabelPanel = null;
             mainPanel.setVisible(false);
             Projectile dart = new Projectile(Double.parseDouble(velocity.getText()), Double.parseDouble(launchAngle.getText()),
                     Double.parseDouble(height.getText()), Double.parseDouble(dragCoefficientF.getText()),
                     Double.parseDouble(fluidDensityF.getText()), Double.parseDouble(surfaceAreaF.getText()),
                     Double.parseDouble(massF.getText()));
             dart.launch(0.0001);
+            maxVelocity = Double.parseDouble(velocity.getText()) * 1.4;
+            minVelocity = 0;
             length = dart.getX_position();
             maxHeight = dart.getMaxHeight();
             loadHome();
