@@ -104,7 +104,7 @@ public class Interface extends JFrame implements ActionListener {
 
         controlPanels[3].add(new JLabel("Surface Area (m^3)"));
         if (surfaceAreaF == null) {
-            surfaceAreaF = new JTextField("0.000126", 10);
+            surfaceAreaF = new JTextField("0.00012668", 10);
             surfaceAreaF.addActionListener(this);
         }
         controlPanels[3].add(surfaceAreaF);
@@ -182,25 +182,25 @@ public class Interface extends JFrame implements ActionListener {
             }
 
             JLabel label = new JLabel("                                                         " +
-                    String.format("%.0f", dart.getX_position() / (getWidth() - 400 - 300) * (getHeight() - 100 - 250) * 4 / 4) +
+                    String.format("%.0f", length / (getWidth() - 400 - 300) * (getHeight() - 100 - 250) * 4 / 4) +
                     "m");
             label.setForeground(axesColor);
             yAxes[3].add(label);
 
             label = new JLabel("                                                         " +
-                    String.format("%.0f", dart.getX_position() / (getWidth() - 400 - 300) * (getHeight() - 100 - 250) * 3 / 4) +
+                    String.format("%.0f", length / (getWidth() - 400 - 300) * (getHeight() - 100 - 250) * 3 / 4) +
                     "m");
             label.setForeground(axesColor);
             yAxes[12].add(label);
 
             label = new JLabel("                                                         " +
-                    String.format("%.0f", dart.getX_position() / (getWidth() - 400 - 300) * (getHeight() - 100 - 250) * 2 / 4) +
+                    String.format("%.0f", length / (getWidth() - 400 - 300) * (getHeight() - 100 - 250) * 2 / 4) +
                     "m");
             label.setForeground(axesColor);
             yAxes[21].add(label);
 
             label = new JLabel("                                                         " +
-                    String.format("%.0f", dart.getX_position() / (getWidth() - 400 - 300) * (getHeight() - 100 - 250) * 1 / 4) +
+                    String.format("%.0f", length / (getWidth() - 400 - 300) * (getHeight() - 100 - 250) * 1 / 4) +
                     "m");
             label.setForeground(axesColor);
             yAxes[30].add(label);
@@ -233,19 +233,19 @@ public class Interface extends JFrame implements ActionListener {
                 }
             }
 
-            JLabel label = new JLabel(String.format("%.0f", dart.getX_position() * 1 / 4) + "m");
+            JLabel label = new JLabel(String.format("%.0f", length * 1 / 4) + "m");
             label.setForeground(axesColor);
             xAxes2[17][0].add(label, BorderLayout.WEST);
 
-            label = new JLabel(String.format("%.0f", dart.getX_position() * 2 / 4) + "m");
+            label = new JLabel(String.format("%.0f", length * 2 / 4) + "m");
             label.setForeground(axesColor);
             xAxes2[24][0].add(label, BorderLayout.WEST);
 
-            label = new JLabel(String.format("%.0f", dart.getX_position() * 3 / 4) + "m");
+            label = new JLabel(String.format("%.0f", length * 3 / 4) + "m");
             label.setForeground(axesColor);
             xAxes2[31][0].add(label, BorderLayout.WEST);
 
-            label = new JLabel(String.format("%.0f", dart.getX_position() * 4 / 4) + "m");
+            label = new JLabel(String.format("%.0f", length * 4 / 4) + "m");
             label.setForeground(axesColor);
             xAxes2[38][0].add(label, BorderLayout.WEST);
         }
@@ -447,6 +447,9 @@ public class Interface extends JFrame implements ActionListener {
             minVelocity = 0;
             length = dart.getX_position();
             maxHeight = dart.getMaxHeight();
+            if (maxHeight > length * (getHeight() - 350) / (getWidth() - 650)) {
+                length = maxHeight * (getWidth() - 650) / (getHeight() - 350);
+            }
             loadHome();
         }
 
