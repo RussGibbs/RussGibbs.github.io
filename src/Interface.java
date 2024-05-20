@@ -250,7 +250,6 @@ public class Interface extends JFrame implements ActionListener {
         toolBarR.add(new JLabel("Distance:                   "));
         toolBarR.add(new JLabel("Max Height:                    "));
         toolBarR.add(new JLabel("Time in Flight:                  "));
-        toolBarR.add(new JLabel("Velocity at Apex:                   "));
         toolBarR.add(new JLabel("Minimum Velocity Reached:                    "));
 
 
@@ -333,7 +332,6 @@ public class Interface extends JFrame implements ActionListener {
         toolBarR.add(new JLabel("Distance: " + String.format("%.2f", dart.getX_position()) + "m     "));
         toolBarR.add(new JLabel("Max Height: " + String.format("%.2f", dart.getMaxHeight()) + "m     "));
         toolBarR.add(new JLabel("Time in Flight: " + String.format("%.2f", dart.getTime()) + "s      "));
-        toolBarR.add(new JLabel("Velocity at Apex: " + String.format("%.2f", dart.getApexVelocity()) + "m/s      "));
         toolBarR.add(new JLabel("Minimum Velocity Reached: " + String.format("%.2f", dart.getMinVelocity()) + "m/s      "));
 
         dart = new Projectile(Double.parseDouble(velocity.getText()), Double.parseDouble(launchAngle.getText()),

@@ -10,7 +10,7 @@ public class Projectile {
     private double time;
     private double maxHeight;
     private double minVelocity;
-    private double apexVelocity;
+
 
     public Projectile() {
         velocity = 0;
@@ -24,7 +24,6 @@ public class Projectile {
         surfaceArea = 0.000126;
         mass = 0.001;
         minVelocity = 0;
-        apexVelocity = 0;
     }
 
     public Projectile(double velocity, double angle, double height, double dragCoefficient, double fluidDensity, double surfaceArea, double mass) {
@@ -39,7 +38,6 @@ public class Projectile {
         this.surfaceArea = surfaceArea;
         this.mass = mass;
         minVelocity = 0;
-        apexVelocity = 0;
     }
 
     public double getVelocity() {
@@ -86,10 +84,6 @@ public class Projectile {
         return minVelocity;
     }
 
-    public double getApexVelocity() {
-        return apexVelocity;
-    }
-
     public void setVelocity(double velocity) {
         this.velocity = velocity;
         if (velocity < minVelocity) {
@@ -111,7 +105,6 @@ public class Projectile {
         if (y_position > maxHeight) {
             maxHeight = y_position;
             minVelocity = velocity;
-            apexVelocity = velocity;
         }
     }
 
