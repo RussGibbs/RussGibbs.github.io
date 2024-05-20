@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 public class Interface extends JFrame implements ActionListener {
+    double dt;
+
     JPanel mainPanel;
 
     Color background;
@@ -45,6 +47,7 @@ public class Interface extends JFrame implements ActionListener {
     double minVelocity;
 
     public Interface() {
+        dt = 0.0001;
         setSize(4480, 2520);
         background = new Color(0x000000);
         axesColor = new Color(0xaaaaaa);
@@ -57,7 +60,7 @@ public class Interface extends JFrame implements ActionListener {
                 Double.parseDouble(height.getText()), Double.parseDouble(dragCoefficientF.getText()),
                 Double.parseDouble(fluidDensityF.getText()), Double.parseDouble(surfaceAreaF.getText()),
                 Double.parseDouble(massF.getText()), Double.parseDouble(gravity.getText()));
-        dart.launch(0.0001);
+        dart.launch(dt);
         length = dart.getX_position();
         maxHeight = dart.getMaxHeight();
         loadHome();
@@ -175,7 +178,7 @@ public class Interface extends JFrame implements ActionListener {
                     Double.parseDouble(height.getText()), Double.parseDouble(dragCoefficientF.getText()),
                     Double.parseDouble(fluidDensityF.getText()), Double.parseDouble(surfaceAreaF.getText()),
                     Double.parseDouble(massF.getText()), Double.parseDouble(gravity.getText()));
-            this.dart.launch(0.0001);
+            this.dart.launch(dt);
             if (maxVelocity == 0)  {
                 maxVelocity = Double.parseDouble(velocity.getText()) * 1.4;
                 minVelocity = 0;
@@ -344,7 +347,7 @@ public class Interface extends JFrame implements ActionListener {
                 Double.parseDouble(height.getText()), Double.parseDouble(dragCoefficientF.getText()),
                 Double.parseDouble(fluidDensityF.getText()), Double.parseDouble(surfaceAreaF.getText()),
                 Double.parseDouble(massF.getText()), Double.parseDouble(gravity.getText()));
-        this.dart.launch(0.0001);
+        this.dart.launch(dt);
         toolBarR.setVisible(false);
         toolBarR = new JPanel();
         toolBarR.setLayout(new FlowLayout());
@@ -368,7 +371,7 @@ public class Interface extends JFrame implements ActionListener {
                     if (!cancelled) {
                         long start = System.nanoTime();
                         process(null);
-                        dart.move(0.0001);
+                        dart.move(dt);
                         while (System.nanoTime() - start < 100000);
                     }
                 }
@@ -442,7 +445,7 @@ public class Interface extends JFrame implements ActionListener {
                     Double.parseDouble(height.getText()), Double.parseDouble(dragCoefficientF.getText()),
                     Double.parseDouble(fluidDensityF.getText()), Double.parseDouble(surfaceAreaF.getText()),
                     Double.parseDouble(massF.getText()), Double.parseDouble(gravity.getText()));
-            dart.launch(0.0001);
+            dart.launch(dt);
             maxVelocity = Double.parseDouble(velocity.getText()) * 1.4;
             minVelocity = 0;
             length = dart.getX_position();
