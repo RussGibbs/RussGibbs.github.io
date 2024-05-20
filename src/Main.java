@@ -1,6 +1,4 @@
-import java.applet.Applet;
-
-public class Main extends Applet {
+public class Main {
     public static void main (String[] args) {
         Interface interFace = new Interface();
     }
