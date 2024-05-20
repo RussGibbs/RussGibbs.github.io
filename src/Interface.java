@@ -95,7 +95,7 @@ public class Interface extends JFrame implements ActionListener {
         }
         controlPanels[1].add(dragCoefficientF);
 
-        controlPanels[2].add(new JLabel("Fluid Density (kgm^-3)"));
+        controlPanels[2].add(new JLabel("Fluid Density (kg/m^3)"));
         if (fluidDensityF == null) {
             fluidDensityF = new JTextField("1.225", 10);
             fluidDensityF.addActionListener(this);
@@ -117,7 +117,7 @@ public class Interface extends JFrame implements ActionListener {
         controlPanels[4].add(massF);
 
 
-        controlPanels[6].add(new JLabel("Velocity (ms^-1)"));
+        controlPanels[6].add(new JLabel("Velocity (m/s)"));
         if (velocity == null) {
             velocity = new JTextField("100", 10);
             velocity.addActionListener(this);
@@ -131,7 +131,7 @@ public class Interface extends JFrame implements ActionListener {
         }
         controlPanels[7].add(launchAngle);
 
-        controlPanels[8].add(new JLabel("Gravity (ms^-2)"));
+        controlPanels[8].add(new JLabel("Gravity (m/s^2)"));
         if (gravity == null) {
             gravity = new JTextField("-9.80665", 10);
             gravity.addActionListener(this);
