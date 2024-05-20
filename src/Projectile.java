@@ -10,6 +10,7 @@ public class Projectile {
     private double time;
     private double maxHeight;
     private double minVelocity;
+    private double maxVelocity;
     private double gravity;
 
 
@@ -24,7 +25,8 @@ public class Projectile {
         fluidDensity = 1.225;
         surfaceArea = 0.000126;
         mass = 0.001;
-        minVelocity = 0;
+        minVelocity = Integer.MAX_VALUE;
+        maxVelocity = 0;
         gravity = -9.80665;
     }
 
@@ -39,7 +41,8 @@ public class Projectile {
         this.fluidDensity = fluidDensity;
         this.surfaceArea = surfaceArea;
         this.mass = mass;
-        minVelocity = 0;
+        minVelocity = velocity;
+        maxVelocity = velocity;
         this.gravity = gravity;
     }
 
@@ -87,11 +90,21 @@ public class Projectile {
         return minVelocity;
     }
 
+    public double getMaxVelocity() {
+        return maxVelocity;
+    }
+
     public void setVelocity(double velocity) {
         this.velocity = velocity;
         if (velocity < minVelocity) {
             minVelocity = velocity;
         }
+
+        if (velocity > maxVelocity) {
+            maxVelocity = velocity;
+        }
+
+
     }
 
     public void setAngle(double angle) {
@@ -107,7 +120,6 @@ public class Projectile {
         this.y_position = y_position;
         if (y_position > maxHeight) {
             maxHeight = y_position;
-            minVelocity = velocity;
         }
     }
 
