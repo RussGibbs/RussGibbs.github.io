@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.text.FlowView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,7 +26,8 @@ public class Interface extends JFrame implements ActionListener {
     JPanel xAxis;
 
     JPanel toolBar;
-    JPanel toolBarR;
+    JPanel[] toolBarR;
+    JPanel toolBarRSection;
     JPanel toolBarL;
     BufferedImage graphics;
     Graphics2D g;
@@ -265,16 +267,27 @@ public class Interface extends JFrame implements ActionListener {
         toolBarL.setVisible(true);
         toolBar.add(toolBarL, BorderLayout.WEST);
 
-        toolBarR = new JPanel();
-        toolBarR.setLayout(new FlowLayout());
-        toolBarR.setVisible(true);
-        toolBar.add(toolBarR, BorderLayout.EAST);
+        toolBarRSection = new JPanel();
+        toolBarRSection.setLayout(new GridLayout(2, 1));
+        toolBar.add(toolBarRSection, BorderLayout.EAST);
+        toolBarR = new JPanel[2];
+        toolBarR[0] = new JPanel();
+        toolBarR[0].setLayout(new FlowLayout());
+        toolBarR[0].setVisible(true);
+        toolBarRSection.add(toolBarR[0]);
+        toolBarRSection.add(toolBarR[0]);
+        toolBarR[1] = new JPanel();
+        toolBarR[1].setLayout(new FlowLayout());
+        toolBarR[1].setVisible(true);
 
-        toolBarR.add(new JLabel("Distance:                   "));
-        toolBarR.add(new JLabel("Max Height:                    "));
-        toolBarR.add(new JLabel("Time in Flight:                  "));
-        toolBarR.add(new JLabel("Maximum Velocity Reached:                    "));
-        toolBarR.add(new JLabel("Minimum Velocity Reached:                    "));
+        toolBarR[0].add(new JLabel("Distance:                   "));
+        toolBarR[0].add(new JLabel("Max Height:                    "));
+        toolBarR[0].add(new JLabel("Time in Flight:                  "));
+        toolBarR[0].add(new JLabel("Maximum Velocity Reached:                    "));
+        toolBarR[0].add(new JLabel("Minimum Velocity Reached:                    "));
+
+        toolBarR[1].add(new JLabel("Current Velocity:                          "));
+
 
 
         toolBarL.add(new JLabel("        "));
@@ -348,16 +361,26 @@ public class Interface extends JFrame implements ActionListener {
                 Double.parseDouble(fluidDensityF.getText()), Double.parseDouble(surfaceAreaF.getText()),
                 Double.parseDouble(massF.getText()), Double.parseDouble(gravity.getText()));
         this.dart.launch(dt);
-        toolBarR.setVisible(false);
-        toolBarR = new JPanel();
-        toolBarR.setLayout(new FlowLayout());
-        toolBarR.setVisible(true);
-        toolBar.add(toolBarR, BorderLayout.EAST);
-        toolBarR.add(new JLabel("Distance: " + String.format("%.2f", dart.getX_position()) + "m     "));
-        toolBarR.add(new JLabel("Max Height: " + String.format("%.2f", dart.getMaxHeight()) + "m     "));
-        toolBarR.add(new JLabel("Time in Flight: " + String.format("%.2f", dart.getTime()) + "s      "));
-        toolBarR.add(new JLabel("Maximum Velocity Reached: " + String.format("%.2f", dart.getMaxVelocity()) + "m/s      "));
-        toolBarR.add(new JLabel("Minimum Velocity Reached: " + String.format("%.2f", dart.getMinVelocity()) + "m/s      "));
+        toolBarR[0] = new JPanel();
+        toolBarR[0].setLayout(new FlowLayout());
+        toolBarR[0].setVisible(true);
+        toolBarR[1] = new JPanel();
+        toolBarR[1].setLayout(new FlowLayout());
+        toolBarR[1].setVisible(true);
+        toolBarRSection.setVisible(false);
+        toolBarRSection = new JPanel();
+        toolBarRSection.setLayout(new GridLayout(2, 1));
+        toolBarRSection.add(toolBarR[0]);
+        toolBarRSection.add(toolBarR[1]);
+        toolBar.add(toolBarRSection, BorderLayout.EAST);
+        toolBarR[0].add(new JLabel("Distance: " + String.format("%.2f", dart.getX_position()) + "m     "));
+        toolBarR[0].add(new JLabel("Max Height: " + String.format("%.2f", dart.getMaxHeight()) + "m     "));
+        toolBarR[0].add(new JLabel("Time in Flight: " + String.format("%.2f", dart.getTime()) + "s      "));
+        toolBarR[0].add(new JLabel("Maximum Velocity Reached: " + String.format("%.2f", dart.getMaxVelocity()) + "m/s      "));
+        toolBarR[0].add(new JLabel("Minimum Velocity Reached: " + String.format("%.2f", dart.getMinVelocity()) + "m/s      "));
+
+        toolBarR[1] = new JPanel();
+        toolBarR[1].setLayout(new FlowLayout());
 
         this.dart = new Projectile(Double.parseDouble(velocity.getText()), Double.parseDouble(launchAngle.getText()),
                 Double.parseDouble(height.getText()), Double.parseDouble(dragCoefficientF.getText()),
