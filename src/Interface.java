@@ -239,9 +239,9 @@ public class Interface extends JFrame implements ActionListener {
 
             JLabel label = new JLabel(String.format("%.0f", length * 1 / 4) + "m");
             label.setForeground(axesColor);
-            xAxes2[17][0].add(label, BorderLayout.WEST);
+            xAxes2[18][0].add(label, BorderLayout.WEST);
 
-            label = new JLabel(String.format("%.0f", length * 2 / 4) + "m");
+            label = new JLabel("    " + String.format("%.0f", length * 2 / 4) + "m");
             label.setForeground(axesColor);
             xAxes2[24][0].add(label, BorderLayout.WEST);
 
@@ -249,9 +249,9 @@ public class Interface extends JFrame implements ActionListener {
             label.setForeground(axesColor);
             xAxes2[31][0].add(label, BorderLayout.WEST);
 
-            label = new JLabel(String.format("%.0f", length * 4 / 4) + "m");
+            label = new JLabel("    " + String.format("%.0f", length * 4 / 4) + "m");
             label.setForeground(axesColor);
-            xAxes2[38][0].add(label, BorderLayout.WEST);
+            xAxes2[37][0].add(label, BorderLayout.WEST);
         }
         lowPanel.add(xAxis);
 
